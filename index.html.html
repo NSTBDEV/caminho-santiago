@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d0a05">
+<title>🐚 O Meu Caminho</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#1a1208;color:#e8d9b8;font-family:'Crimson Pro',serif;min-height:100vh;overflow-x:hidden}
+.app{max-width:430px;margin:0 auto;min-height:100vh;background:#1a1208;position:relative;padding-bottom:80px}
+/* HEADER */
+.header{background:linear-gradient(180deg,#0d0a05 0%,#1a1208 100%);padding:24px 20px 14px;text-align:center;border-bottom:1px solid #3d2e14;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 50% 0%,rgba(212,160,23,0.12) 0%,transparent 70%);pointer-events:none}
+.shell{font-size:26px;display:block;filter:drop-shadow(0 0 8px rgba(212,160,23,0.4));margin-bottom:4px}
+.h-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;color:#b8943a;text-transform:uppercase;margin-bottom:3px}
+.h-route{font-family:'Cinzel',serif;font-size:16px;color:#e8d9b8;font-weight:600;margin-bottom:8px}
+.h-frase{font-style:italic;font-size:11px;color:#b8943a;line-height:1.5;padding:7px 12px;border-left:2px solid #b8943a;text-align:left;background:rgba(212,160,23,0.05);border-radius:0 5px 5px 0;margin-bottom:5px}
+.h-q{font-size:10px;color:#8a7a5a;letter-spacing:1px}
+.sync-bar{display:flex;align-items:center;justify-content:center;gap:6px;font-size:9px;color:#3d2e14;margin-top:8px;font-family:'Cinzel',serif;letter-spacing:1px}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:#3d2e14}
+.sync-dot.ok{background:#64b464}
+.sync-dot.saving{background:#d4a017;animation:pulse 1s infinite}
+.sync-dot.offline{background:#c85050}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+/* KM BAR */
+.km-wrap{margin-top:10px}
+.km-labels{display:flex;justify-content:space-between;font-size:10px;color:#6b5c3a;font-family:'Cinzel',serif}
+.km-bar{background:#0d0a05;border-radius:4px;height:5px;overflow:hidden;margin:4px 0}
+.km-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#d4a017,#64b464);transition:width 0.5s}
+.dia-btns{display:flex;justify-content:center;gap:5px;margin-top:8px;flex-wrap:wrap}
+.dia-btn{width:25px;height:25px;border-radius:50%;border:1px solid #3d2e14;background:transparent;color:#4a3e2a;font-size:9px;cursor:pointer;font-family:'Cinzel',serif;transition:all 0.15s}
+.dia-btn.passado{border-color:#64b464;background:rgba(100,180,100,0.15);color:#64b464}
+.dia-btn.atual{border-color:#d4a017;color:#d4a017;font-weight:700}
+.km-hint{font-size:9px;color:#3d2e14;text-align:center;margin-top:3px;font-style:italic}
+/* NAV */
+.nav{display:flex;background:#0d0a05;border-bottom:1px solid #3d2e14;overflow-x:auto;scrollbar-width:none;position:sticky;top:0;z-index:100}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{flex:0 0 auto;padding:10px 11px;background:none;border:none;color:#6b5c3a;font-family:'Cinzel',serif;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.2s}
+.nav-btn.active{color:#d4a017;border-bottom-color:#d4a017}
+/* CONTENT */
+.content{padding:14px}
+.tab-content{display:none}
+.tab-content.active{display:block}
+/* COMMON */
+.sec{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;color:#b8943a;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sec::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,#3d2e14,transparent)}
+.card{background:#221808;border:1px solid #3d2e14;border-radius:8px;margin-bottom:10px;overflow:hidden}
+.cp{padding:14px}
+.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #2a1e0a;font-size:13px;align-items:center}
+.row:last-child{border-bottom:none}
+.rl{color:#6b5c3a}
+.rv{color:#e8d9b8;font-weight:600;text-align:right;max-width:60%;font-size:12px}
+.nota-box{margin-top:10px;padding:8px 10px;background:rgba(212,160,23,0.05);border-left:2px solid #b8943a;font-size:12px;color:#b8943a;font-style:italic;line-height:1.5;border-radius:0 4px 4px 0}
+.badge{font-size:10px;padding:2px 6px;border-radius:3px;font-family:'Cinzel',serif}
+.bw{background:rgba(212,100,20,0.15);color:#d46414;border:1px solid rgba(212,100,20,0.3)}
+.bg{background:rgba(212,160,23,0.1);color:#d4a017;border:1px solid rgba(212,160,23,0.3)}
+.bgn{background:rgba(100,180,100,0.1);color:#64b464;border:1px solid rgba(100,180,100,0.3)}
+.bb{background:rgba(100,150,200,0.1);color:#6496c8;border:1px solid rgba(100,150,200,0.3)}
+.br{background:rgba(200,80,80,0.1);color:#c85050;border:1px solid rgba(200,80,80,0.3)}
+.chev{color:#6b5c3a;font-size:11px;transition:transform 0.2s;display:inline-block}
+.chev.open{transform:rotate(180deg)}
+.hint{font-size:11px;color:#4a3e2a;font-style:italic;margin-bottom:12px}
+.prog-bar{background:#0d0a05;border-radius:4px;height:5px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#64b464,#b8943a);transition:width 0.3s}
+.btn{padding:10px 16px;border-radius:6px;border:none;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1.5px;cursor:pointer;text-transform:uppercase;width:100%;margin-top:8px}
+.btn-g{background:rgba(100,180,100,0.15);border:1px solid #64b464;color:#64b464}
+.btn-r{background:rgba(200,80,80,0.15);border:1px solid #c85050;color:#c85050}
+.btn-gold{background:rgba(212,160,23,0.15);border:1px solid #d4a017;color:#d4a017}
+/* SOS BUTTON */
+.sos{position:fixed;bottom:90px;right:16px;width:52px;height:52px;border-radius:50%;background:rgba(200,50,50,0.9);border:2px solid #e85050;color:#fff;font-family:'Cinzel',serif;font-size:11px;font-weight:700;cursor:pointer;z-index:999;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(200,50,50,0.4);letter-spacing:1px}
+/* TODAY TAB */
+.today-dia{font-family:'Cinzel',serif;font-size:11px;color:#6b5c3a;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.today-etapa{font-size:20px;color:#e8d9b8;font-weight:600;line-height:1.2;margin-bottom:8px}
+.today-meta{display:flex;gap:12px;font-size:12px;color:#8a7a5a;margin-bottom:12px;flex-wrap:wrap}
+.today-meta span{display:flex;align-items:center;gap:4px}
+.today-aloj{background:rgba(212,160,23,0.06);border:1px solid rgba(212,160,23,0.2);border-radius:6px;padding:10px 12px;margin-bottom:10px}
+.today-aloj-label{font-size:10px;color:#6b5c3a;font-family:'Cinzel',serif;letter-spacing:1px;margin-bottom:4px}
+.today-aloj-nome{font-size:14px;color:#e8d9b8;font-weight:600;margin-bottom:6px}
+.tel-link{display:flex;align-items:center;gap:6px;color:#b8943a;font-size:16px;text-decoration:none;font-weight:300}
+.today-frase{font-style:italic;font-size:14px;color:#b8943a;padding:12px 14px;background:rgba(212,160,23,0.05);border-left:2px solid #b8943a;border-radius:0 6px 6px 0;line-height:1.6;margin-bottom:10px}
+.today-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.today-stat{background:#221808;border:1px solid #3d2e14;border-radius:6px;padding:10px;text-align:center}
+.today-stat-num{font-family:'Cinzel',serif;font-size:22px;display:block;margin-bottom:2px}
+.today-stat-label{font-size:10px;color:#6b5c3a;letter-spacing:0.5px}
+/* ALBERGUE CHECKLIST */
+.alb-check-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #1e1508;cursor:pointer}
+.alb-check-item:last-child{border-bottom:none}
+.alb-circle{width:20px;height:20px;border-radius:50%;border:2px solid #3d2e14;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700}
+.alb-circle.done{background:rgba(100,180,100,0.15);border-color:#64b464;color:#64b464}
+.alb-text{font-size:13px;color:#e8d9b8;flex:1}
+.alb-text.done{color:#4a3e2a;text-decoration:line-through}
+/* ETAPAS */
+.et-header{display:flex;align-items:center;padding:12px 14px;gap:12px;cursor:pointer}
+.et-num{font-family:'Cinzel',serif;font-size:20px;color:#d4a017;font-weight:700;min-width:26px}
+.et-info{flex:1}
+.et-rota{font-size:14px;color:#e8d9b8;font-weight:600;margin-bottom:2px}
+.et-meta{display:flex;gap:8px;font-size:11px;color:#8a7a5a;flex-wrap:wrap}
+.et-body{padding:0 14px 14px;border-top:1px solid #2a1e0a;display:none}
+.et-body.open{display:block}
+.stab-row{display:flex;gap:5px;margin:10px 0}
+.stab{flex:1;padding:6px 3px;background:none;border:1px solid #3d2e14;border-radius:5px;font-family:'Cinzel',serif;font-size:8px;color:#6b5c3a;cursor:pointer;text-align:center}
+.stab.active{border-color:#d4a017;color:#d4a017;background:rgba(212,160,23,0.06)}
+.li{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #1e1508;font-size:12px}
+.li:last-child{border-bottom:none}
+.li-i{font-size:14px;flex-shrink:0}
+.li-m{flex:1}
+.li-t{color:#e8d9b8}
+.li-s{color:#6b5c3a;font-size:11px;margin-top:1px}
+.timer-d{font-family:'Cinzel',serif;font-size:30px;color:#d4a017;text-align:center;letter-spacing:4px;margin:8px 0}
+/* EQUIPAMENTO */
+.eq-sum{background:#221808;border:1px solid #3d2e14;border-radius:8px;padding:12px;margin-bottom:12px;display:flex;gap:8px}
+.eq-stat{flex:1;text-align:center}
+.eq-num{font-family:'Cinzel',serif;font-size:20px;font-weight:700;display:block;line-height:1;margin-bottom:3px}
+.eq-lbl{font-size:9px;color:#6b5c3a;letter-spacing:1px;text-transform:uppercase}
+.sg{color:#64b464}.sd{color:#d4a017}.sb{color:#6496c8}
+.eq-group{margin-bottom:16px}
+.eq-gtitle{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:#6b5c3a;text-transform:uppercase;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #2a1e0a}
+.eq-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #1e1508;cursor:pointer}
+.eq-item:last-child{border-bottom:none}
+.eq-check{width:20px;height:20px;border-radius:4px;border:1.5px solid #3d2e14;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700}
+.eq-check.tenho{background:rgba(100,180,100,0.15);border-color:#64b464;color:#64b464}
+.eq-check.comprar{background:rgba(212,160,23,0.1);border-color:#d4a017;color:#d4a017}
+.eq-name{flex:1;font-size:13px;color:#e8d9b8}
+.eq-name.riscado{color:#4a3e2a;text-decoration:line-through}
+.eq-price{font-size:11px;color:#d4a017;font-family:'Cinzel',serif}
+.eq-critical{font-size:9px;color:#c85050;font-family:'Cinzel',serif;letter-spacing:0.5px;margin-left:4px}
+.frow{display:flex;gap:6px;margin-bottom:12px}
+.fbtn{flex:1;padding:7px 4px;border-radius:5px;border:1px solid #3d2e14;background:none;font-family:'Cinzel',serif;font-size:9px;cursor:pointer;color:#6b5c3a}
+.fbtn.ft{background:rgba(100,180,100,0.1);border-color:#64b464;color:#64b464}
+.fbtn.fc{background:rgba(212,160,23,0.1);border-color:#d4a017;color:#d4a017}
+/* DIÁRIO */
+.d-day{background:#221808;border:1px solid #3d2e14;border-radius:8px;margin-bottom:10px;overflow:hidden}
+.d-header{display:flex;align-items:center;padding:12px 14px;gap:10px;cursor:pointer}
+.d-num{font-family:'Cinzel',serif;font-size:18px;color:#d4a017;font-weight:700;min-width:24px}
+.d-info{flex:1}
+.d-rota{font-size:13px;color:#e8d9b8;font-weight:600}
+.d-prev{font-size:11px;color:#6b5c3a;margin-top:2px;font-style:italic}
+.d-body{padding:0 14px 14px;border-top:1px solid #2a1e0a;display:none}
+.d-body.open{display:block}
+.d-frase-input{width:100%;background:#1a1208;border:1px solid rgba(212,160,23,0.3);border-radius:6px;color:#b8943a;font-family:'Crimson Pro',serif;font-style:italic;font-size:14px;padding:8px 12px;margin-top:12px;outline:none;resize:none}
+.d-frase-input::placeholder{color:#3d2e14;font-style:italic}
+.d-frase-input:focus{border-color:#b8943a}
+.d-ta{width:100%;background:#1a1208;border:1px solid #3d2e14;border-radius:6px;color:#e8d9b8;font-family:'Crimson Pro',serif;font-size:13px;padding:10px 12px;resize:none;margin-top:8px;line-height:1.6;min-height:90px;outline:none}
+.d-ta:focus{border-color:#b8943a}
+.d-ta::placeholder{color:#4a3e2a;font-style:italic}
+/* ORÇAMENTO */
+.orc-h{background:#221808;border:1px solid #3d2e14;border-radius:8px;padding:14px;margin-bottom:12px}
+.orc-total{font-family:'Cinzel',serif;font-size:30px;color:#d4a017;text-align:center;letter-spacing:2px;margin-bottom:3px}
+.orc-lbl{text-align:center;font-size:10px;color:#6b5c3a;font-family:'Cinzel',serif;margin-bottom:10px}
+.orc-stats{display:flex;gap:6px}
+.orc-stat{flex:1;text-align:center}
+.orc-snum{font-family:'Cinzel',serif;font-size:15px;display:block;margin-bottom:2px}
+.orc-slbl{font-size:9px;color:#6b5c3a}
+.orc-day{background:#221808;border:1px solid #3d2e14;border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.orc-dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.orc-dt{font-family:'Cinzel',serif;font-size:11px;color:#d4a017;letter-spacing:1px}
+.orc-dtotal{font-family:'Cinzel',serif;font-size:16px;color:#e8d9b8}
+.orc-inputs{display:flex;gap:6px;margin-bottom:6px}
+.orc-ig{flex:1}
+.orc-il{font-size:10px;color:#6b5c3a;margin-bottom:3px}
+.orc-i{width:100%;background:#1a1208;border:1px solid #3d2e14;border-radius:4px;color:#e8d9b8;font-family:'Cinzel',serif;font-size:14px;padding:8px;outline:none;text-align:center}
+.orc-i:focus{border-color:#b8943a}
+.orc-nota{width:100%;background:#1a1208;border:1px solid #3d2e14;border-radius:4px;color:#8a7a5a;font-family:'Crimson Pro',serif;font-style:italic;font-size:12px;padding:6px 8px;outline:none;margin-top:2px;resize:none}
+.orc-nota:focus{border-color:#b8943a}
+.orc-nota::placeholder{color:#3d2e14}
+/* VÍDEO */
+.vid-card{background:#221808;border:1px solid #3d2e14;border-radius:8px;padding:14px;margin-bottom:10px}
+.vid-h{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.vid-icon{font-size:22px}
+.vid-title{font-family:'Cinzel',serif;font-size:12px;color:#d4a017;letter-spacing:1px;flex:1}
+.vid-time{font-size:11px;color:#6b5c3a}
+.vid-desc{font-size:13px;color:#8a7a5a;line-height:1.6;margin-bottom:8px}
+.vid-q{font-style:italic;font-size:14px;color:#b8943a;padding:10px 12px;background:rgba(212,160,23,0.05);border-left:2px solid #b8943a;border-radius:0 4px 4px 0}
+/* CONTACTOS */
+.tel-card{background:#221808;border:1px solid #3d2e14;border-radius:8px;padding:12px 14px;margin-bottom:10px}
+.tel-local{font-family:'Cinzel',serif;font-size:10px;color:#6b5c3a;letter-spacing:1px;text-transform:uppercase}
+.tel-nome{font-size:14px;color:#e8d9b8;font-weight:600;margin:4px 0}
+.tel-num{font-size:18px;color:#b8943a;font-weight:300;text-decoration:none;display:block}
+.tel-nota{font-size:11px;color:#6b5c3a;margin-top:4px;font-style:italic}
+.emer{background:rgba(200,80,80,0.08);border:1px solid rgba(200,80,80,0.25);border-radius:8px;padding:14px;margin-bottom:10px}
+/* MAIS */
+.mais-section{margin-bottom:20px}
+/* SAÚDE */
+.saude-day{background:#221808;border:1px solid #3d2e14;border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.saude-dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;cursor:pointer}
+.saude-dt{font-family:'Cinzel',serif;font-size:11px;color:#d4a017;letter-spacing:1px}
+.saude-body{display:none}
+.saude-body.open{display:block}
+.saude-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #1e1508;font-size:12px}
+.saude-row:last-child{border-bottom:none}
+.saude-lbl{color:#6b5c3a;min-width:100px}
+.saude-val{flex:1;display:flex;gap:6px}
+.saude-btn{padding:4px 8px;border-radius:4px;border:1px solid #3d2e14;background:none;color:#6b5c3a;font-family:'Cinzel',serif;font-size:10px;cursor:pointer}
+.saude-btn.sel{border-color:#d4a017;color:#d4a017;background:rgba(212,160,23,0.1)}
+.saude-input{flex:1;background:#1a1208;border:1px solid #3d2e14;border-radius:4px;color:#e8d9b8;font-family:'Crimson Pro',serif;font-size:13px;padding:4px 8px;outline:none}
+.saude-input:focus{border-color:#b8943a}
+/* PEREGRINOS */
+.pereg-item{background:#221808;border:1px solid #3d2e14;border-radius:8px;padding:12px 14px;margin-bottom:8px;position:relative}
+.pereg-nome{font-size:15px;color:#e8d9b8;font-weight:600}
+.pereg-de{font-size:11px;color:#6b5c3a;margin:2px 0 6px}
+.pereg-frase{font-style:italic;font-size:13px;color:#b8943a}
+.pereg-dia{font-size:10px;color:#4a3e2a;font-family:'Cinzel',serif;margin-top:6px}
+.pereg-del{position:absolute;top:10px;right:10px;background:none;border:none;color:#4a3e2a;font-size:16px;cursor:pointer}
+.pereg-form{background:#221808;border:1px solid rgba(212,160,23,0.3);border-radius:8px;padding:14px;margin-bottom:14px}
+.pereg-fi{width:100%;background:#1a1208;border:1px solid #3d2e14;border-radius:4px;color:#e8d9b8;font-family:'Crimson Pro',serif;font-size:14px;padding:8px 10px;margin-bottom:8px;outline:none}
+.pereg-fi:focus{border-color:#b8943a}
+.pereg-fi::placeholder{color:#4a3e2a}
+/* MARCOS */
+.marco-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #1e1508;cursor:pointer}
+.marco-item:last-child{border-bottom:none}
+.marco-icon{font-size:24px;flex-shrink:0}
+.marco-info{flex:1}
+.marco-title{font-size:13px;color:#e8d9b8;font-weight:600}
+.marco-desc{font-size:11px;color:#6b5c3a;margin-top:1px}
+.marco-data{font-size:10px;color:#d4a017;font-family:'Cinzel',serif;margin-top:3px}
+.marco-check{width:22px;height:22px;border-radius:50%;border:2px solid #3d2e14;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.marco-check.done{background:rgba(212,160,23,0.1);border-color:#d4a017;color:#d4a017}
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.stat-card{background:#221808;border:1px solid #3d2e14;border-radius:8px;padding:12px;text-align:center}
+.stat-num{font-family:'Cinzel',serif;font-size:24px;font-weight:700;display:block;margin-bottom:3px}
+.stat-lbl{font-size:10px;color:#6b5c3a;letter-spacing:0.5px}
+/* TREINO */
+.treino-card{background:#221808;border:1px solid #3d2e14;border-radius:8px;padding:12px 14px;margin-bottom:10px}
+.treino-title{font-family:'Cinzel',serif;font-size:10px;color:#d4a017;letter-spacing:1px;margin-bottom:8px;text-transform:uppercase}
+.ti{display:flex;gap:10px;padding:5px 0;font-size:12px;border-bottom:1px solid #1e1508;align-items:flex-start}
+.ti:last-child{border-bottom:none}
+.ti-s{font-family:'Cinzel',serif;font-size:10px;color:#6b5c3a;min-width:70px;padding-top:1px}
+.ti-d{color:#8a7a5a;line-height:1.5}
+/* PROP */
+.prop-card{background:#221808;border:1px solid #3d2e14;border-radius:8px;padding:18px;margin-bottom:10px;text-align:center}
+.prop-icon{font-size:26px;margin-bottom:8px;display:block}
+.prop-lbl{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;color:#6b5c3a;text-transform:uppercase;margin-bottom:8px}
+.prop-text{font-size:22px;color:#e8d9b8;font-weight:300;line-height:1.4}
+.prop-frase{font-style:italic;font-size:14px;color:#b8943a;line-height:1.6}
+.bs{height:20px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <span class="shell">🐚</span>
+    <div class="h-title">Caminho Português Central — Variante de Braga</div>
+    <div class="h-route">Braga → Santiago de Compostela</div>
+    <div class="h-frase">"O que é meu já me conhece. Está a vir ao meu encontro."</div>
+    <div class="h-q">Pergunta: Quem sou eu?</div>
+    <div class="sync-bar">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span id="sync-txt">A CARREGAR...</span>
+    </div>
+    <div class="km-wrap">
+      <div class="km-labels"><span>📍 Braga</span><span id="km-txt">0 / 190 km</span><span>🏁 Santiago</span></div>
+      <div class="km-bar"><div class="km-fill" id="km-fill" style="width:0%"></div></div>
+      <div class="dia-btns" id="dia-btns"></div>
+      <div class="km-hint">Toca no dia para atualizar o progresso</div>
+    </div>
+  </div>
+  <div class="nav" id="nav"></div>
+  <div class="content">
+
+    <!-- HOJE -->
+    <div class="tab-content active" id="tab-hoje">
+      <div id="hoje-container"></div>
+      <div class="bs"></div>
+    </div>
+
+    <!-- ETAPAS -->
+    <div class="tab-content" id="tab-etapas">
+      <div class="sec">9/10 Dias — ~190 km</div>
+      <div id="timer-global" style="display:none;background:#221808;border:1px solid rgba(212,160,23,0.4);border-radius:8px;padding:14px;margin-bottom:14px">
+        <div style="font-size:11px;color:#d4a017;font-family:'Cinzel',serif;letter-spacing:1px;margin-bottom:4px" id="timer-label">⏱️ Etapa em curso</div>
+        <div class="timer-d" id="timer-global-d">00:00:00</div>
+        <button class="btn btn-r" onclick="stopTimer()">⏹ Terminar Etapa</button>
+      </div>
+      <div id="etapas-container"></div>
+      <div class="bs"></div>
+    </div>
+
+    <!-- DIÁRIO -->
+    <div class="tab-content" id="tab-diario">
+      <div class="sec">Diário do Caminho</div>
+      <div class="hint">Uma frase que resume o dia + notas livres. Guardado na cloud.</div>
+      <div id="diario-container"></div>
+      <div class="bs"></div>
+    </div>
+
+    <!-- ORÇAMENTO -->
+    <div class="tab-content" id="tab-orcamento">
+      <div class="sec">Controlo de Gastos</div>
+      <div class="orc-h">
+        <div class="orc-total" id="orc-total">€0</div>
+        <div class="orc-lbl">Total gasto</div>
+        <div class="orc-stats">
+          <div class="orc-stat"><span class="orc-snum" style="color:#6496c8" id="orc-aloj">€0</span><span class="orc-slbl">Aloj.</span></div>
+          <div class="orc-stat"><span class="orc-snum" style="color:#d4a017" id="orc-comida">€0</span><span class="orc-slbl">Comida</span></div>
+          <div class="orc-stat"><span class="orc-snum" style="color:#b8943a" id="orc-extra">€0</span><span class="orc-slbl">Extra</span></div>
+          <div class="orc-stat"><span class="orc-snum" style="color:#64b464" id="orc-sobra">€420</span><span class="orc-slbl">Sobra</span></div>
+        </div>
+        <div class="prog-bar" style="margin-top:10px"><div class="prog-fill" id="orc-prog" style="width:0%"></div></div>
+        <div style="text-align:center;font-size:10px;color:#6b5c3a;margin-top:4px">Orçamento estimado: €260–420</div>
+      </div>
+      <div class="hint">Preenche no final de cada dia.</div>
+      <div id="orc-container"></div>
+      <div class="bs"></div>
+    </div>
+
+    <!-- DORMIR -->
+    <div class="tab-content" id="tab-dormir">
+      <div class="sec">10 Noites</div>
+      <div id="aloj-container"></div>
+      <div class="bs"></div>
+    </div>
+
+    <!-- MOCHILA -->
+    <div class="tab-content" id="tab-mochila">
+      <div class="sec">Lista de Equipamento</div>
+      <div class="eq-sum">
+        <div class="eq-stat"><span class="eq-num sg" id="eq-tenho">0</span><span class="eq-lbl">Tenho</span></div>
+        <div class="eq-stat"><span class="eq-num sd" id="eq-comprar">0</span><span class="eq-lbl">A comprar</span></div>
+        <div class="eq-stat"><span class="eq-num sb" id="eq-decidir">0</span><span class="eq-lbl">Por decidir</span></div>
+      </div>
+      <div class="prog-bar" style="margin-bottom:4px"><div class="prog-fill" id="eq-prog" style="width:0%"></div></div>
+      <div style="text-align:right;font-size:10px;color:#6b5c3a;margin-bottom:12px" id="eq-prog-txt">0% confirmado</div>
+      <div class="frow">
+        <button class="fbtn" id="f-todos" onclick="setFilter('todos')">Todos</button>
+        <button class="fbtn" id="f-tenho" onclick="setFilter('tenho')">✓ Tenho</button>
+        <button class="fbtn" id="f-comprar" onclick="setFilter('comprar')">€ A Comprar</button>
+      </div>
+      <div class="hint">Toca: sem marca → tenho ✓ → a comprar €</div>
+      <div id="equip-container"></div>
+      <div class="bs"></div>
+    </div>
+
+    <!-- VÍDEO -->
+    <div class="tab-content" id="tab-video">
+      <div class="sec">Ritual Diário</div>
+      <div class="vid-card">
+        <div class="vid-h"><span class="vid-icon">🌅</span><span class="vid-title">Manhã — A Partida</span><span class="vid-time">~2 min</span></div>
+        <div class="vid-desc">Antes de sair do albergue. Sem guião, informal. Câmara na mão.</div>
+        <div class="vid-q">"Como me sinto agora, antes de começar este dia?"</div>
+        <button class="btn btn-gold" onclick="window.location='x-apple-native://camera'||alert('Abre a câmara do telemóvel')">📷 Abrir Câmara</button>
+      </div>
+      <div class="vid-card">
+        <div class="vid-h"><span class="vid-icon">🌿</span><span class="vid-title">Caminho — O Momento</span><span class="vid-time">Espontâneo</span></div>
+        <div class="vid-desc">Com gimbal, em movimento. Só quando algo te tocar.</div>
+        <div class="vid-q">Fala como se fosse um diário de voz.</div>
+      </div>
+      <div class="vid-card">
+        <div class="vid-h"><span class="vid-icon">🎙️</span><span class="vid-title">Subidas — Só Áudio</span><span class="vid-time">Livre</span></div>
+        <div class="vid-desc">Lapela no bolso. Os pensamentos mais honestos aparecem quando não estás a tentar responder.</div>
+        <div class="vid-q">Ouves à noite antes de gravar o diário.</div>
+      </div>
+      <div class="vid-card" style="border-color:rgba(212,160,23,0.5)">
+        <div class="vid-h"><span class="vid-icon">🌙</span><span class="vid-title">Noite — O Diário</span><span class="vid-time">~3–5 min</span></div>
+        <div class="vid-desc">Câmara fixa no gimbal. Contas o dia, o que sentiste, o que mudou.</div>
+        <div class="vid-q" style="font-size:16px">"Hoje percebi que sou alguém que..."</div>
+        <button class="btn btn-gold" onclick="window.location='x-apple-native://camera'||alert('Abre a câmara do telemóvel')" style="margin-top:10px">📷 Gravar Diário</button>
+      </div>
+      <div class="sec" style="margin-top:18px">Setup</div>
+      <div class="treino-card">
+        <div class="ti"><span class="ti-s">Telemóvel</span><span class="ti-d">Tudo — câmara, GPS, backup</span></div>
+        <div class="ti"><span class="ti-s">Gimbal DJI</span><span class="ti-d">Planos em movimento + diário noturno</span></div>
+        <div class="ti"><span class="ti-s">Lapela</span><span class="ti-d">Áudio limpo sempre, mesmo no vento</span></div>
+        <div class="ti"><span class="ti-s">Powerbank</span><span class="ti-d">Carrega tudo à noite</span></div>
+        <div class="ti"><span class="ti-s">Google Fotos</span><span class="ti-d">Backup automático em WiFi</span></div>
+      </div>
+      <div class="vid-card" style="margin-top:10px">
+        <div class="vid-desc">O vídeo serve-te a ti — não a uma audiência. Podes ser feio, confuso, contraditório, emocionado.</div>
+        <div class="vid-q">Daqui a um ano vais ver um homem a descobrir-se.</div>
+      </div>
+      <div class="bs"></div>
+    </div>
+
+    <!-- CONTACTOS -->
+    <div class="tab-content" id="tab-contactos">
+      <div class="sec">Emergência</div>
+      <div class="emer">
+        <div style="font-family:'Cinzel',serif;font-size:10px;color:#c85050;letter-spacing:1px;margin-bottom:4px;text-transform:uppercase">⚠️ Emergência Portugal e Espanha</div>
+        <a href="tel:112" style="font-size:40px;color:#e85050;font-family:'Cinzel',serif;font-weight:700;letter-spacing:6px;text-decoration:none;display:block">112</a>
+        <div style="font-size:12px;color:#8a5050;margin-top:4px">Toca no número para ligar</div>
+      </div>
+      <div class="sec" style="margin-top:16px">Albergues</div>
+      <div id="contactos-container"></div>
+      <div class="sec" style="margin-top:16px">Documentos</div>
+      <div class="treino-card">
+        <div class="ti"><span class="ti-s">Credencial</span><span class="ti-d">Sé de Braga — grátis</span></div>
+        <div class="ti"><span class="ti-s">Vieira</span><span class="ti-d">Lojas junto à Sé — ~€5</span></div>
+        <div class="ti"><span class="ti-s">Cartão Saúde</span><span class="ti-d">SNS24 ou Centro de Saúde</span></div>
+        <div class="ti"><span class="ti-s">Compostela</span><span class="ti-d">Escritório do Peregrino — Rua das Carretas 33</span></div>
+      </div>
+      <div class="sec" style="margin-top:16px">Apps Essenciais</div>
+      <div class="treino-card">
+        <div class="ti"><span class="ti-s">Gronze</span><span class="ti-d">Albergues e guia do caminho</span></div>
+        <div class="ti"><span class="ti-s">Buen Camino</span><span class="ti-d">Mapas offline + GPS</span></div>
+        <div class="ti"><span class="ti-s">Google Fotos</span><span class="ti-d">Backup automático dos vídeos</span></div>
+        <div class="ti"><span class="ti-s">WhatsApp</span><span class="ti-d">Partilha de localização em tempo real</span></div>
+      </div>
+      <div class="sec" style="margin-top:16px">Regresso</div>
+      <div class="treino-card">
+        <div class="treino-title">Domingo — Alguém vai buscar-te 🚗</div>
+        <div class="ti"><span class="ti-s">Alternativa</span><span class="ti-d">ALSA — Santiago → Braga</span></div>
+        <div class="ti"><span class="ti-s">Horários</span><span class="ti-d">9h30 / 12h30 / 18h15</span></div>
+        <div class="ti"><span class="ti-s">Duração</span><span class="ti-d">~1h44</span></div>
+      </div>
+      <div class="bs"></div>
+    </div>
+
+    <!-- MAIS -->
+    <div class="tab-content" id="tab-mais">
+
+      <div class="mais-section">
+        <div class="sec">🏆 Marcos do Caminho</div>
+        <div class="card" id="marcos-container"></div>
+      </div>
+
+      <div class="mais-section">
+        <div class="sec">🦶 Saúde Diária</div>
+        <div class="hint">Regista como te sentes cada dia. Ajuda a prevenir lesões.</div>
+        <div id="saude-container"></div>
+      </div>
+
+      <div class="mais-section">
+        <div class="sec">🤝 Peregrinos que Encontrei</div>
+        <div class="pereg-form">
+          <input class="pereg-fi" id="p-nome" placeholder="Nome do peregrino...">
+          <input class="pereg-fi" id="p-de" placeholder="De onde vem...">
+          <input class="pereg-fi" id="p-frase" placeholder="Uma frase que ficou...">
+          <button class="btn btn-gold" onclick="addPeregrino()">+ Adicionar Peregrino</button>
+        </div>
+        <div id="pereg-container"></div>
+      </div>
+
+      <div class="mais-section">
+        <div class="sec">📊 Estatísticas</div>
+        <div class="stat-grid" id="stats-container"></div>
+      </div>
+
+      <div class="mais-section">
+        <div class="sec">⚙️ Início — Propósito</div>
+        <div class="prop-card"><span class="prop-icon">❓</span><div class="prop-lbl">A Pergunta</div><div class="prop-text">Quem sou eu?</div></div>
+        <div class="prop-card"><span class="prop-icon">✨</span><div class="prop-lbl">A Frase</div><div class="prop-frase">"O que é meu já me conhece.<br>Está a vir ao meu encontro."</div></div>
+        <div class="card cp">
+          <div class="row"><span class="rl">Rota</span><span class="rv">Português Central — Braga</span></div>
+          <div class="row"><span class="rl">Distância</span><span class="rv">~190 km</span></div>
+          <div class="row"><span class="rl">Duração</span><span class="rv">9–10 dias + Santiago</span></div>
+          <div class="row"><span class="rl">Partida</span><span class="rv">Sé de Braga — Sexta</span></div>
+          <div class="row"><span class="rl">Chegada</span><span class="rv">Sábado ou Domingo</span></div>
+          <div class="row"><span class="rl">Regresso</span><span class="rv">Vão buscar-te 🚗</span></div>
+        </div>
+        <div class="sec" style="margin-top:16px">Treino</div>
+        <div class="treino-card">
+          <div class="treino-title">Plano antes de partir</div>
+          <div class="ti"><span class="ti-s">Esta semana</span><span class="ti-d">10 km diários com mochila de 6kg</span></div>
+          <div class="ti"><span class="ti-s">Seg. semana</span><span class="ti-d">2 saídas de 15–18 km. 1 com desnível — Bom Jesus.</span></div>
+          <div class="ti"><span class="ti-s">Antes partir</span><span class="ti-d">1 saída de 20 km. Depois descansa.</span></div>
+        </div>
+        <div class="sec" style="margin-top:16px">Setembro — Geira</div>
+        <div class="card cp">
+          <div class="row"><span class="rl">Rota</span><span class="rv">Geira e Arrieiros</span></div>
+          <div class="row"><span class="rl">Distância</span><span class="rv">~240 km</span></div>
+          <div class="row"><span class="rl">Duração</span><span class="rv">10 dias</span></div>
+          <div class="row"><span class="rl">Terreno</span><span class="rv">Montanha pelo Gerês</span></div>
+        </div>
+      </div>
+
+      <div class="bs"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SOS -->
+<button class="sos" onclick="window.location='tel:112'">SOS<br>112</button>
+
+<script>
+const SUPABASE_URL = 'https://ysixpxndknvvhwscyngx.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzaXhweG5ka252dmh3c2N5bmd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2NjcwMzEsImV4cCI6MjA5MzI0MzAzMX0.Ke-uTLwezzhKNRo7y3zVvccLiddrAzg7euL4r6lLzuE';
+
+// Unique device ID
+function getDeviceId() {
+  let id = localStorage.getItem('caminho-device-id');
+  if (!id) { id = 'bruno-' + Date.now(); localStorage.setItem('caminho-device-id', id); }
+  return id;
+}
+const DEVICE_ID = getDeviceId();
+
+// STATE
+let S = {
+  tab:'hoje', itemStates:{}, checklist:{}, notas:{}, notas_frase:{}, orcamento:{}, orc_notas:{},
+  dia_atual:0, saude:{}, peregrinos:[], marcos:{}, albergue_check:{},
+  openEtapa:null, etapaSubTab:{}, equipFilter:'todos', openDiario:null,
+  openSaude:null, timerOn:false, timerEtapa:null, timerSecs:0
+};
+let timerInt = null, saveTO = null, syncOk = false;
+
+// SUPABASE
+async function supaLoad() {
+  try {
+    setSyncStatus('saving', 'A CARREGAR...');
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/caminho_bruno?device_id=eq.${DEVICE_ID}&select=*`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await r.json();
+    if (data && data.length > 0) {
+      const d = data[0];
+      if (d.item_states) S.itemStates = d.item_states;
+      if (d.checklist) S.checklist = d.checklist;
+      if (d.notas) S.notas = d.notas;
+      if (d.notas) S.notas_frase = d.notas_frase || {};
+      if (d.orcamento) S.orcamento = d.orcamento;
+      if (d.orc_notas) S.orc_notas = d.orc_notas || {};
+      if (d.dia_atual !== undefined) S.dia_atual = d.dia_atual;
+      if (d.saude) S.saude = d.saude;
+      if (d.peregrinos) S.peregrinos = d.peregrinos;
+      if (d.marcos) S.marcos = d.marcos;
+      if (d.albergue_check) S.albergue_check = d.albergue_check;
+    }
+    syncOk = true;
+    setSyncStatus('ok', 'GUARDADO NA CLOUD');
+  } catch(e) {
+    loadLocal();
+    setSyncStatus('offline', 'MODO OFFLINE');
+  }
+}
+
+async function supaSave() {
+  saveLocal();
+  try {
+    setSyncStatus('saving', 'A GUARDAR...');
+    const payload = {
+      device_id: DEVICE_ID,
+      item_states: S.itemStates, checklist: S.checklist,
+      notas: S.notas, notas_frase: S.notas_frase,
+      orcamento: S.orcamento, orc_notas: S.orc_notas,
+      dia_atual: S.dia_atual, saude: S.saude,
+      peregrinos: S.peregrinos, marcos: S.marcos,
+      albergue_check: S.albergue_check,
+      updated_at: new Date().toISOString()
+    };
+    await fetch(`${SUPABASE_URL}/rest/v1/caminho_bruno`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify(payload)
+    });
+    setSyncStatus('ok', 'GUARDADO NA CLOUD');
+  } catch(e) {
+    setSyncStatus('offline', 'GUARDADO LOCALMENTE');
+  }
+}
+
+function saveLocal() {
+  try {
+    localStorage.setItem('caminho-backup', JSON.stringify({
+      itemStates:S.itemStates, checklist:S.checklist, notas:S.notas, notas_frase:S.notas_frase,
+      orcamento:S.orcamento, orc_notas:S.orc_notas, dia_atual:S.dia_atual,
+      saude:S.saude, peregrinos:S.peregrinos, marcos:S.marcos, albergue_check:S.albergue_check
+    }));
+  } catch(e) {}
+}
+
+function loadLocal() {
+  try {
+    const d = localStorage.getItem('caminho-backup');
+    if (d) {
+      const p = JSON.parse(d);
+      Object.assign(S, p);
+    }
+  } catch(e) {}
+}
+
+function setSyncStatus(status, txt) {
+  const dot = document.getElementById('sync-dot');
+  const t = document.getElementById('sync-txt');
+  if (dot) dot.className = 'sync-dot ' + status;
+  if (t) t.textContent = txt;
+}
+
+function scheduleSave() {
+  clearTimeout(saveTO);
+  saveTO = setTimeout(supaSave, 1200);
+}
+
+// DATA
+const FRASES_DIA = [
+  "O primeiro passo é sempre o mais honesto.",
+  "Não és o teu cansaço. És o que continua apesar dele.",
+  "A ponte romana de Ponte de Lima já viu mil peregrinos. Viu-te a ti hoje.",
+  "No topo da serra, a pergunta fica mais clara.",
+  "31 quilómetros. O corpo aprende o que a cabeça ainda não sabe.",
+  "Pontevedra guardará a memória de quem aqui passou.",
+  "As termas não são luxo. São necessidade.",
+  "Padrón é onde tudo começou. E onde algo em ti vai terminar.",
+  "O último dia não é o fim. É a resposta.",
+  "Chegaste. Agora sabes quem és."
+];
+
+const CHECKLIST_PARTIDA = [
+  {id:'c1',t:'Credencial com primeiro carimbo na Sé de Braga',critico:true},
+  {id:'c2',t:'Vieira pendurada na mochila',critico:true},
+  {id:'c3',t:'Telemóvel 100% carregado',critico:true},
+  {id:'c4',t:'Powerbank carregado',critico:true},
+  {id:'c5',t:'Track GPS variante de Braga offline',critico:true},
+  {id:'c6',t:'Track GPS Variante Espiritual offline (se for fazê-la)',critico:false},
+  {id:'c7',t:'App Gronze com mapas offline',critico:true},
+  {id:'c8',t:'Partilha de localização ativa no WhatsApp',critico:true},
+  {id:'c9',t:'Mochila pesada — máx. 6,5 kg com água',critico:true},
+  {id:'c10',t:'Fogão + cartucho na mochila (para dia 3)',critico:true},
+  {id:'c11',t:'Vaselina nos pés antes de sair',critico:true},
+  {id:'c12',t:'Protetor solar aplicado',critico:false},
+  {id:'c13',t:'Compeed acessível — não no fundo da mochila',critico:true},
+  {id:'c14',t:'Toalha de microfibra na mochila',critico:false},
+  {id:'c15',t:'Saco cama na mochila',critico:true},
+  {id:'c16',t:'Snacks do dia 1 na mochila',critico:false},
+  {id:'c17',t:'Dinheiro em notas — mínimo €30',critico:true},
+  {id:'c18',t:'Cartão europeu de saúde + ID',critico:true},
+  {id:'c19',t:'Cabos de carregamento acessíveis',critico:false},
+  {id:'c20',t:'Contactos de emergência gravados no telemóvel',critico:false},
+  {id:'c21',t:'Número do primeiro albergue guardado',critico:false},
+  {id:'c22',t:'Todos os alojamentos confirmados',critico:true},
+];
+
+const ALBERGUE_CHECKLIST = [
+  {id:'a1',t:'Escolhi cama — perto de tomada, longe da porta'},
+  {id:'a2',t:'Lavei a roupa'},
+  {id:'a3',t:'Pendurei a roupa a secar'},
+  {id:'a4',t:'Telemóvel e powerbank a carregar'},
+  {id:'a5',t:'Spray de magnésio nas pernas'},
+  {id:'a6',t:'Tiger Balm nos gémeos e coxas'},
+  {id:'a7',t:'Voltaren nos joelhos se necessário'},
+  {id:'a8',t:'Vaselina nos pés'},
+  {id:'a9',t:'Bebeu 500ml de água'},
+  {id:'a10',t:'Diário de vídeo feito'},
+  {id:'a11',t:'Nota do diário escrita'},
+];
+
+const ETAPAS = [
+  {num:1,de:"Braga",para:"Goães",km:20,saida:"07h00",chegada:"~12h00",terreno:"Plano",dif:"Moderada",aloj:"Albergue S. Pedro de Goães",custo:"Donativo",nota:"Primeiro dia — não forces o ritmo. Primeiro carimbo na Sé de Braga antes de partir.",badges:[],clima:"Braga,Portugal",
+   carimbos:[{i:"⛪",n:"Sé de Braga",s:"Antes de partir — primeiro carimbo"},{i:"🏛️",n:"Mosteiro de Rendufe",s:"Pelo caminho"},{i:"🏠",n:"Albergue S. Pedro de Goães",s:"À chegada"}],
+   comer:[{n:"Cafés em Braga",d:"Pequeno-almoço antes de partir"},{n:"Cafés pelo caminho",d:"Vários até Goães"},{n:"Restaurante local em Goães",d:"Perguntar no albergue"}]},
+  {num:2,de:"Goães",para:"Ponte de Lima",km:20,saida:"07h00",chegada:"~12h30",terreno:"Plano/Rural",dif:"Moderada",aloj:"Albergue Municipal Casa do Arnado",custo:"€5–15",nota:"Atravessar a ponte romana é um dos momentos mais marcantes. A vila mais antiga de Portugal.",badges:[],clima:"Ponte+de+Lima,Portugal",
+   carimbos:[{i:"⛪",n:"Igreja pelo caminho",s:"Aldeia de Moure"},{i:"🏛️",n:"Câmara de Ponte de Lima",s:"Centro histórico"},{i:"🏠",n:"Albergue Casa do Arnado",s:"À chegada"}],
+   comer:[{n:"Cafés pelo caminho",d:"Aldeias entre Goães e Lima"},{n:"Restaurantes em Ponte de Lima",d:"Centro histórico — várias opções"}]},
+  {num:3,de:"Ponte de Lima",para:"Rubiães",km:19,saida:"07h00",chegada:"~13h30",terreno:"Serra da Labruja",dif:"Exigente",aloj:"Albergue de Rubiães / Ninho Pilgrim Nest",custo:"€8–20",nota:"⛰️ O dia do fogão. Come no topo da Serra da Labruja com vista para o vale do Lima.",badges:["⛰️ Serra da Labruja","🔥 Fogão"],clima:"Rubi%C3%A3es,Portugal",
+   carimbos:[{i:"⛪",n:"Igreja de Labruja",s:"Pelo caminho"},{i:"⛪",n:"Igreja de Rubiães",s:"Centro da aldeia"},{i:"🏠",n:"Albergue de Rubiães",s:"À chegada"}],
+   comer:[{n:"Café em Ponte de Lima",d:"Leva lanche — serra tem pouco apoio"},{n:"🔥 Refeição desidratada",d:"Serra da Labruja — o momento especial"},{n:"Bar/restaurante em Rubiães",d:"Perguntar no albergue"}]},
+  {num:4,de:"Rubiães",para:"Valença/Tui",km:18,saida:"07h00",chegada:"~12h30",terreno:"Suave",dif:"Moderada",aloj:"Hostel Bulwark — dentro da fortaleza",custo:"€15–25",nota:"Atravessas o Rio Minho para Espanha. Carimba dos dois lados da fronteira.",badges:["🇵🇹→🇪🇸 Fronteira"],clima:"Valen%C3%A7a,Portugal",
+   carimbos:[{i:"🏛️",n:"Câmara de Valença",s:"Dentro da fortaleza"},{i:"⛪",n:"Igreja de Valença",s:"Fortaleza medieval"},{i:"⛪",n:"Catedral de Tui",s:"Espanha — obrigatório"},{i:"🏠",n:"Hostel Bulwark",s:"À chegada"}],
+   comer:[{n:"Restaurantes em Valença",d:"Centro da fortaleza"},{n:"Restaurantes em Tui",d:"Centro histórico galego"}]},
+  {num:5,de:"Tui",para:"Redondela",km:31,saida:"06h30",chegada:"~15h30",terreno:"Misto",dif:"Muito exigente",aloj:"Albergue Xunta — chegada direta",custo:"€6",nota:"⚠️ A etapa mais longa. Sai às 6h30. Come a cada hora sem esperar ter fome. Passa pela Ponte das Febres.",badges:["⚠️ 31 km — A mais longa"],clima:"Redondela,Spain",
+   carimbos:[{i:"⛪",n:"Igreja de Porriño",s:"Pelo caminho"},{i:"🌉",n:"Ponte das Febres",s:"Marco histórico"},{i:"🏠",n:"Albergue Xunta Redondela",s:"À chegada"}],
+   comer:[{n:"Bar/café em Porriño",d:"A meio — ~15 km"},{n:"Restaurantes em Redondela",d:"Boa gastronomia galega"}]},
+  {num:6,de:"Redondela",para:"Pontevedra",km:18,saida:"07h00",chegada:"~13h00",terreno:"Misto",dif:"Exigente",aloj:"Bulezen Urban Hostel",custo:"€15–18",nota:"Uma das etapas mais difíceis e mais bonitas. Pontevedra é uma das cidades mais bonitas da Galiza.",badges:[],clima:"Pontevedra,Spain",
+   carimbos:[{i:"⛪",n:"Capelas pelo caminho",s:"Aldeias rurais galegas"},{i:"⛪",n:"Basílica de Santa Maria",s:"Pontevedra centro"},{i:"🏠",n:"Bulezen Urban Hostel",s:"À chegada"}],
+   comer:[{n:"Cafés pelo caminho",d:"Entre Redondela e Pontevedra"},{n:"Pontevedra — centro histórico",d:"Pulpo, empanada, caldo galego"}]},
+  {num:7,de:"Pontevedra",para:"Caldas de Reis / Armenteira",km:21,saida:"07h00",chegada:"~13h30",terreno:"Suave / Serra",dif:"Moderada",aloj:"Albergue As Pozas Termais / Albergue Armenteira",custo:"€12–15",nota:"Aqui decides: Caminho Central → Caldas de Reis (etapas 7-8-9) ou Variante Espiritual → Armenteira (etapas 7-8-9-10). Vira à esquerda 3km depois de Pontevedra para a Variante.",badges:["🔀 Decisão aqui"],clima:"Caldas+de+Reis,Spain",
+   carimbos:[{i:"⛪",n:"Igrejas pelo caminho",s:"Aldeias galegas"},{i:"🏠",n:"Albergue destino",s:"À chegada"}],
+   comer:[{n:"Cafés pelo caminho",d:"Entre Pontevedra e destino"},{n:"Restaurante no albergue",d:"Perguntar ao chegar"}]},
+  {num:8,de:"Caldas de Reis / Armenteira",para:"Padrón / Vilanova de Arousa",km:18,saida:"07h00",chegada:"~12h30",terreno:"Suave",dif:"Moderada",aloj:"Albergue Municipal Padrón / Albergue Vilanova",custo:"€6–15",nota:"Central: última noite em Padrón antes de Santiago. Variante: Ruta da Pedra e da Água até Vilanova de Arousa.",badges:[],clima:"Padr%C3%B3n,Spain",
+   carimbos:[{i:"⛪",n:"Igrejas pelo caminho",s:"Aldeias rurais"},{i:"🏠",n:"Albergue destino",s:"À chegada"}],
+   comer:[{n:"Cafés pelo caminho",d:"Vários"},{n:"Restaurantes no destino",d:"Pimentos de Padrón se estiveres lá"}]},
+  {num:9,de:"Padrón / Vilanova de Arousa",para:"Santiago / Padrón via barco",km:25,saida:"07h00",chegada:"~11h30",terreno:"Misto / Barco",dif:"Moderada",aloj:"Albergue Seminário Menor / Albergue Municipal Padrón",custo:"€6–12",nota:"Central: último dia para Santiago. Chegada ~11h30 para a Missa do Peregrino às 12h. Variante: barco de Vilanova para Pontecesures + 2km a pé até Padrón.",badges:["🎉 Final próximo"],clima:"Santiago+de+Compostela,Spain",
+   carimbos:[{i:"⛪",n:"Catedral de Santiago",s:"O carimbo final"},{i:"📜",n:"Escritório do Peregrino",s:"Rua das Carretas 33 — Compostela"}],
+   comer:[{n:"Café antes de partir",d:"Energia para o último dia"},{n:"Santiago — celebra",d:"Mereces o melhor jantar da viagem"}]},
+  {num:10,de:"Padrón",para:"Santiago de Compostela",km:25,saida:"07h00",chegada:"~11h30",terreno:"Misto",dif:"Moderada",aloj:"Albergue Seminário Menor",custo:"€12",nota:"🎉 O último dia — Variante Espiritual. Não corras. Missa do Peregrino às 12h00. Busca a Compostela na Rua das Carretas 33.",badges:["🎉 Santiago!"],clima:"Santiago+de+Compostela,Spain",
+   carimbos:[{i:"⛪",n:"Capelas pelo caminho",s:"Últimos km"},{i:"⛪",n:"Catedral de Santiago",s:"O carimbo final"},{i:"📜",n:"Escritório do Peregrino",s:"Rua das Carretas 33"}],
+   comer:[{n:"Café em Padrón",d:"Antes de partir"},{n:"Santiago — Praça do Obradoiro",d:"O jantar mais especial da tua vida"}]}
+];
+
+const ALOJAMENTOS = [
+  {dia:"Noite 1",local:"Goães",nome:"Albergue S. Pedro de Goães",st:"bgn",stxt:"✅ Confirmado",custo:"Donativo",tel:"910 493 382",como:"Telefone"},
+  {dia:"Noite 2",local:"Ponte de Lima",nome:"Albergue Municipal Casa do Arnado",st:"bgn",stxt:"✅ Confirmado",custo:"€5–15",tel:"258 240 200",como:"Telefone"},
+  {dia:"Noite 3",local:"Rubiães",nome:"Albergue de Rubiães / Ninho Pilgrim Nest",st:"bg",stxt:"📞 Liga esta semana",custo:"€8–20",tel:"965 053 751 / 916 866 372",como:"Telefone"},
+  {dia:"Noite 4",local:"Valença",nome:"Hostel Bulwark — dentro da fortaleza",st:"bg",stxt:"💻 Booking.com",custo:"€15–25",tel:"",como:"Booking.com"},
+  {dia:"Noite 5",local:"Redondela",nome:"Albergue Municipal Xunta da Galiza",st:"bb",stxt:"🚶 Chegada direta",custo:"€6",tel:"",como:"Sem reserva — chega antes 15h — só dinheiro"},
+  {dia:"Noite 6",local:"Pontevedra",nome:"Bulezen Urban Hostel",st:"bg",stxt:"💻 Booking.com",custo:"€15–18",tel:"",como:"Booking.com"},
+  {dia:"Noite 7A",local:"Caldas de Reis",nome:"Albergue As Pozas Termais (Central)",st:"bg",stxt:"💻 Booking.com",custo:"€12–15",tel:"",como:"Booking.com"},
+  {dia:"Noite 7B",local:"Armenteira",nome:"Albergue Armenteira (Variante Espiritual)",st:"bb",stxt:"📞 Liga antes",custo:"€8–12",tel:"+34 986 738 089",como:"Telefone"},
+  {dia:"Noite 8A",local:"Padrón",nome:"Albergue Municipal de Padrón (Central)",st:"bb",stxt:"🚶 Chegada direta",custo:"€6",tel:"",como:"Sem reserva — chega antes 15h — só dinheiro"},
+  {dia:"Noite 8B",local:"Vilanova de Arousa",nome:"Albergue Vilanova (Variante Espiritual)",st:"bg",stxt:"💻 Booking.com",custo:"€12–18",tel:"",como:"Booking.com — reserva o barco também"},
+  {dia:"Noite 9",local:"Santiago",nome:"Albergue Seminário Menor",st:"br",stxt:"🔴 Reservar já!",custo:"€12",tel:"",como:"Booking.com — urgente, duas datas"}
+];
+
+const CONTACTOS_TEL = [
+  {local:"Noite 1 — Goães",nome:"Albergue S. Pedro de Goães",tel:"910 493 382",nota:"Liga durante a semana"},
+  {local:"Noite 3 — Rubiães",nome:"Albergue de Rubiães",tel:"965 053 751",nota:"Liga com antecedência"},
+  {local:"Noite 3 — Rubiães (alt.)",nome:"Ninho The Pilgrim Nest",tel:"916 866 372",nota:"Alternativa se cheio"},
+  {local:"Noite 2 — Ponte de Lima",nome:"Albergue Municipal",tel:"258 240 200",nota:"Ou reserva online"},
+  {local:"Variante Espiritual — Barco",nome:"Barco Vilanova de Arousa",tel:"+34 986 554 809",nota:"Reservar na véspera — hora depende das marés"},
+];
+
+const EQUIPAMENTO = [
+  {grupo:"👟 Calçado",items:[
+    {id:1,n:"Sapatilhas trekking impermeáveis MH900",p:"~€90",critico:true},
+    {id:2,n:"Sandálias leves para albergue",p:"~€15"},
+    {id:3,n:"Meias anti bolha / merino × 3 pares",p:"~€30",critico:true},
+    {id:4,n:"Óculos de sol UV400 polarizados",p:"~€15",critico:true},
+  ]},
+  {grupo:"🎒 Mochila e transporte",items:[
+    {id:5,n:"Mochila Simond MT500 Air 50+10L",p:"€119",critico:true},
+    {id:6,n:"Colete de hidratação trail",p:"~€25",critico:true},
+    {id:7,n:"Bastão de trekking × 1",p:"~€25"},
+  ]},
+  {grupo:"👕 Roupa",items:[
+    {id:8,n:"T-shirts secagem rápida × 3",p:"~€30",critico:true},
+    {id:9,n:"Calções ou calças trekking × 2",p:"~€40"},
+    {id:10,n:"Roupa interior secagem rápida × 3",p:"~€25",critico:true},
+    {id:11,n:"Casaco impermeável MH100 (15.000mm)",p:"~€70",critico:true},
+    {id:12,n:"Fleece ou casaco leve",p:"~€30"},
+    {id:13,n:"Chapéu ou boné",p:"~€10"},
+    {id:14,n:"Toalha de microfibra",p:"~€10",critico:true},
+  ]},
+  {grupo:"🎬 Tecnologia",items:[
+    {id:15,n:"Telemóvel",p:""},
+    {id:16,n:"Gimbal DJI com tripé",p:""},
+    {id:17,n:"Microfone de lapela",p:""},
+    {id:18,n:"Powerbank 20.000 mAh",p:"",critico:true},
+    {id:19,n:"Cabos de carregamento",p:"",critico:true},
+  ]},
+  {grupo:"🏕️ Equipamento de caminhada",items:[
+    {id:20,n:"Saco cama leve",p:"~€40",critico:true},
+    {id:21,n:"Fogão compacto",p:"~€15",critico:true},
+    {id:22,n:"Cartucho de gás 100g",p:"~€4",critico:true},
+    {id:23,n:"Colher dobrável",p:"~€5"},
+    {id:24,n:"Refeições desidratadas × 2",p:"~€12",critico:true},
+  ]},
+  {grupo:"💊 Medicamentos",items:[
+    {id:25,n:"Ibuprofeno 400mg × 10",p:"~€5",critico:true},
+    {id:26,n:"Paracetamol 500mg × 10",p:"~€3",critico:true},
+    {id:27,n:"Antiácido — Rennie × 10",p:"~€4"},
+    {id:28,n:"Imodium × 6 (antidiarreico)",p:"~€5"},
+  ]},
+  {grupo:"🦶 Saúde dos pés",items:[
+    {id:29,n:"Compeed × 8",p:"~€8",critico:true},
+    {id:30,n:"Urgo Filmogel (para bolhas rebentadas)",p:"~€8",critico:true},
+    {id:31,n:"Kinesio tape × 1 rola",p:"~€8",critico:true},
+    {id:32,n:"Vaselina",p:"~€3",critico:true},
+    {id:33,n:"Agulha esterilizada (para drenar bolhas)",p:"~€1"},
+  ]},
+  {grupo:"💪 Músculos e articulações",items:[
+    {id:34,n:"Tiger Balm vermelho (músculos)",p:"~€6",critico:true},
+    {id:35,n:"Voltaren gel 50g (articulações)",p:"~€8",critico:true},
+    {id:36,n:"Spray de magnésio (cãibras)",p:"~€12",critico:true},
+    {id:37,n:"Magnésio efervescente × 10 (noite)",p:"~€6"},
+    {id:38,n:"Saquetas de frio instantâneo × 2",p:"~€5"},
+  ]},
+  {grupo:"🧴 Proteção e higiene",items:[
+    {id:39,n:"Protetor solar SPF50",p:"~€8",critico:true},
+    {id:40,n:"Lip balm com SPF",p:"~€3"},
+    {id:41,n:"Repelente de insetos",p:"~€5"},
+    {id:42,n:"Sabão líquido de viagem",p:"~€8",critico:true},
+    {id:43,n:"Shampoo mini",p:"~€3"},
+    {id:44,n:"Desodorizante",p:"~€3"},
+    {id:45,n:"Pasta de dentes + escova",p:"~€5",critico:true},
+    {id:46,n:"Máquina de barbear",p:""},
+    {id:47,n:"Molas × 4",p:"~€2",critico:true},
+  ]},
+  {grupo:"🍫 Comida de mochila",items:[
+    {id:48,n:"Frutos secos 200g",p:"~€4"},
+    {id:49,n:"Chocolate negro × 2 tabletes",p:"~€3"},
+    {id:50,n:"Barras de cereais × 6",p:"~€6"},
+    {id:51,n:"Géis de endurance × 2",p:"~€5"},
+    {id:52,n:"Sais de hidratação × 5",p:"~€5",critico:true},
+    {id:53,n:"Pó isotónico × 1 saquetão",p:"~€5",critico:true},
+  ]},
+  {grupo:"📜 Documentos",items:[
+    {id:54,n:"Credencial de peregrino",p:"Grátis",critico:true},
+    {id:55,n:"Vieira",p:"~€5",critico:true},
+    {id:56,n:"Cartão europeu de saúde",p:"Grátis",critico:true},
+    {id:57,n:"Documento de identificação",p:"",critico:true},
+    {id:58,n:"Cartão bancário + notas €",p:"",critico:true},
+  ]},
+  {grupo:"📱 Apps",items:[
+    {id:59,n:"Gronze ou Buen Camino (offline)",p:"Grátis",critico:true},
+    {id:60,n:"Google Fotos — backup automático",p:"Grátis"},
+  ]}
+];
+
+const MARCOS_DEF = [
+  {id:'m1',icon:'👟',title:'Primeiro passo dado',desc:'Saíste da Sé de Braga'},
+  {id:'m2',icon:'🌉',title:'Ponte romana de Ponte de Lima',desc:'A vila mais antiga de Portugal'},
+  {id:'m3',icon:'⛰️',title:'Serra da Labruja conquistada',desc:'E a refeição no topo'},
+  {id:'m4',icon:'🇪🇸',title:'Entrei em Espanha',desc:'Atravessaste o Rio Minho'},
+  {id:'m5',icon:'💯',title:'100 km feitos',desc:'Mais de metade do caminho'},
+  {id:'m6',icon:'⛵',title:'Naveguei pela Ria de Arousa',desc:'Variante Espiritual — a Traslatio'},
+  {id:'m7',icon:'🌙',title:'Última noite antes de Santiago',desc:'Em Padrón'},
+  {id:'m8',icon:'🏁',title:'Cheguei ao Obradoiro',desc:'Santiago de Compostela'},
+  {id:'m9',icon:'📜',title:'Compostela na mão',desc:'Mereceste cada quilómetro'},
+];
+
+// TABS
+const TABS = [
+  {id:'hoje',l:'🌅 Hoje'},{id:'etapas',l:'🗺️ Etapas'},{id:'diario',l:'📝 Diário'},
+  {id:'orcamento',l:'💰 Orçamento'},{id:'dormir',l:'🏠 Dormir'},{id:'mochila',l:'🎒 Mochila'},
+  {id:'video',l:'🎬 Vídeo'},{id:'contactos',l:'📞 Contactos'},{id:'mais',l:'⚙️ Mais'}
+];
+
+function buildNav(){
+  document.getElementById('nav').innerHTML = TABS.map(t=>
+    `<button class="nav-btn ${S.tab===t.id?'active':''}" onclick="switchTab('${t.id}')">${t.l}</button>`
+  ).join('');
+}
+
+function switchTab(id){
+  document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  S.tab=id; buildNav();
+}
+
+// HEADER
+function updateHeader(){
+  const km = ETAPAS.slice(0,S.dia_atual).reduce((a,e)=>a+e.km,0);
+  document.getElementById('km-fill').style.width = ((km/190)*100)+'%';
+  document.getElementById('km-txt').textContent = km+' / 190 km';
+  document.getElementById('dia-btns').innerHTML = [0,1,2,3,4,5,6,7,8,9,10].map(d=>
+    `<button class="dia-btn ${d<S.dia_atual?'passado':d===S.dia_atual?'atual':''}" onclick="setDia(${d})">${d===0?'0':d}</button>`
+  ).join('');
+}
+
+function setDia(d){S.dia_atual=d;scheduleSave();updateHeader();buildHoje();}
+
+// HOJE
+function buildHoje(){
+  const c = document.getElementById('hoje-container');
+  const dia = S.dia_atual;
+  const etapa = dia > 0 && dia <= ETAPAS.length ? ETAPAS[dia-1] : null;
+  const aloj = dia > 0 && dia <= ALOJAMENTOS.length ? ALOJAMENTOS[dia-1] : null;
+  const km = ETAPAS.slice(0,dia).reduce((a,e)=>a+e.km,0);
+  const frase = dia > 0 ? FRASES_DIA[dia-1] : '"O caminho começa num passo."';
+  const checkDone = Object.values(S.checklist).filter(Boolean).length;
+
+  if (dia === 0) {
+    // Pré-caminho
+    c.innerHTML = `
+      <div class="sec">Checklist de Partida — ${checkDone}/${CHECKLIST_PARTIDA.length}</div>
+      <div style="margin-bottom:10px"><div class="prog-bar"><div class="prog-fill" id="check-prog" style="width:${(checkDone/CHECKLIST_PARTIDA.length)*100}%"></div></div></div>
+      <div class="card cp" id="checklist-container"></div>
+      <div class="sec" style="margin-top:16px">Propósito</div>
+      <div class="prop-card"><span class="prop-icon">❓</span><div class="prop-lbl">A Pergunta</div><div class="prop-text">Quem sou eu?</div></div>
+      <div class="card cp">
+        <div class="row"><span class="rl">Partida</span><span class="rv">Sexta-feira — Sé de Braga 7h00</span></div>
+        <div class="row"><span class="rl">Chegada</span><span class="rv">Sábado ou Domingo em Santiago</span></div>
+        <div class="row"><span class="rl">Distância</span><span class="rv">~190 km em 9–10 dias</span></div>
+      </div>`;
+    buildChecklist();
+  } else {
+    const hora = new Date().getHours();
+    const showAlbChk = hora >= 12;
+    const albDone = S.albergue_check[dia] ? Object.values(S.albergue_check[dia]).filter(Boolean).length : 0;
+
+    c.innerHTML = `
+      <div class="card cp" style="border-color:rgba(212,160,23,0.4)">
+        <div class="today-dia">Dia ${dia} de ${ETAPAS.length} — ${new Date().toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'})}</div>
+        <div class="today-etapa">${etapa?etapa.de+' → '+etapa.para:'Caminho concluído'}</div>
+        ${etapa?`<div class="today-meta">
+          <span>📍 ${etapa.km} km</span>
+          <span>⏰ Saída ${etapa.saida}</span>
+          <span>🎯 Chegada ${etapa.chegada}</span>
+          <span>⛰️ ${etapa.terreno}</span>
+          <span>💪 ${etapa.dif}</span>
+        </div>`:''}
+        <div class="today-frase">${frase}</div>
+      </div>
+      <div class="today-stats">
+        <div class="today-stat"><span class="today-stat-num" style="color:#d4a017">${km}</span><span class="today-stat-label">km feitos</span></div>
+        <div class="today-stat"><span class="today-stat-num" style="color:#64b464">${190-km}</span><span class="today-stat-label">km restantes</span></div>
+        <div class="today-stat"><span class="today-stat-num" style="color:#6496c8">${dia}</span><span class="today-stat-label">dias feitos</span></div>
+        <div class="today-stat"><span class="today-stat-num" style="color:#b8943a">${ETAPAS.length-dia}</span><span class="today-stat-label">dias restantes</span></div>
+      </div>
+      ${aloj?`<div class="today-aloj">
+        <div class="today-aloj-label">ESTA NOITE — ${aloj.dia.toUpperCase()}</div>
+        <div class="today-aloj-nome">${aloj.local} — ${aloj.nome}</div>
+        ${aloj.tel?`<a href="tel:${aloj.tel.replace(/[^0-9+]/g,'')}" class="tel-link">📞 ${aloj.tel}</a>`:''}
+        <div style="font-size:11px;color:#6b5c3a;margin-top:4px">${aloj.como} — ${aloj.custo}</div>
+      </div>`:''}
+      ${showAlbChk?`
+      <div class="sec" style="margin-top:4px">✅ Checklist do Albergue — ${albDone}/${ALBERGUE_CHECKLIST.length}</div>
+      <div style="margin-bottom:8px"><div class="prog-bar"><div class="prog-fill" style="width:${(albDone/ALBERGUE_CHECKLIST.length)*100}%"></div></div></div>
+      <div class="card cp" id="alb-check-container"></div>`:''}
+      ${etapa?`<a href="https://weather.com/weather/today/l/${etapa.clima}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:10px;background:rgba(100,150,200,0.08);border:1px solid rgba(100,150,200,0.25);border-radius:6px;color:#6496c8;font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;text-decoration:none;margin-top:8px">🌦️ VER CLIMA PARA HOJE — ${etapa.para.toUpperCase()}</a>`:''}
+    `;
+
+    if (showAlbChk) buildAlbCheck(dia);
+  }
+}
+
+function buildAlbCheck(dia){
+  const c = document.getElementById('alb-check-container');
+  if (!c) return;
+  if (!S.albergue_check[dia]) S.albergue_check[dia] = {};
+  c.innerHTML = ALBERGUE_CHECKLIST.map(item=>{
+    const d = S.albergue_check[dia][item.id];
+    return `<div class="alb-check-item" onclick="toggleAlbCheck(${dia},'${item.id}')">
+      <div class="alb-circle ${d?'done':''}">${d?'✓':''}</div>
+      <span class="alb-text ${d?'done':''}">${item.t}</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleAlbCheck(dia, id){
+  if (!S.albergue_check[dia]) S.albergue_check[dia]={};
+  S.albergue_check[dia][id] = !S.albergue_check[dia][id];
+  scheduleSave(); buildAlbCheck(dia);
+  const done = Object.values(S.albergue_check[dia]).filter(Boolean).length;
+  const prog = document.querySelector('#alb-check-container').previousElementSibling.querySelector('.prog-fill');
+  if (prog) prog.style.width = (done/ALBERGUE_CHECKLIST.length*100)+'%';
+}
+
+function buildChecklist(){
+  const done = Object.values(S.checklist).filter(Boolean).length;
+  const cp = document.getElementById('check-prog');
+  if (cp) cp.style.width = (done/CHECKLIST_PARTIDA.length*100)+'%';
+  const cnt = document.getElementById('checklist-container');
+  if (!cnt) return;
+  cnt.innerHTML = CHECKLIST_PARTIDA.map(i=>{
+    const d = S.checklist[i.id];
+    return `<div class="alb-check-item" onclick="toggleCheck('${i.id}')">
+      <div class="alb-circle ${d?'done':''}">${d?'✓':''}</div>
+      <span class="alb-text ${d?'done':''}">${i.t}${i.critico?'<span style="color:#c85050;font-size:9px;margin-left:4px">●</span>':''}</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleCheck(id){S.checklist[id]=!S.checklist[id];scheduleSave();buildChecklist();}
+
+// ETAPAS
+function buildEtapas(){
+  const gt = document.getElementById('timer-global');
+  if (gt) gt.style.display = S.timerOn?'block':'none';
+  document.getElementById('etapas-container').innerHTML = ETAPAS.map(e=>{
+    const st = S.etapaSubTab[e.num]||'info';
+    const open = S.openEtapa===e.num;
+    const badges = e.badges.map(b=>`<span class="badge ${b.includes('⚠️')?'bw':b.includes('🇵🇹')?'bgn':b.includes('🔀')?'bb':'bg'}">${b}</span>`).join('');
+    let body = '';
+    if (open) {
+      const info = `
+        <div class="row"><span class="rl">Terreno</span><span class="rv">${e.terreno}</span></div>
+        <div class="row"><span class="rl">Dificuldade</span><span class="rv">${e.dif}</span></div>
+        <div class="row"><span class="rl">Alojamento</span><span class="rv" style="font-size:11px">${e.aloj}</span></div>
+        <div class="row"><span class="rl">Custo</span><span class="rv">${e.custo}</span></div>
+        <div class="nota-box">${e.nota}</div>
+        <a href="https://weather.com/weather/today/l/${e.clima}" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;background:rgba(100,150,200,0.08);border:1px solid rgba(100,150,200,0.25);border-radius:6px;color:#6496c8;font-family:'Cinzel',serif;font-size:10px;text-decoration:none;margin-top:10px">🌦️ Clima — ${e.para}</a>`;
+      const carimb = `<div style="font-size:11px;color:#6b5c3a;font-style:italic;margin:4px 0 8px">Mostra a credencial e pede o carimbo.</div>${e.carimbos.map(c=>`<div class="li"><span class="li-i">${c.i}</span><div class="li-m"><div class="li-t">${c.n}</div><div class="li-s">${c.s}</div></div></div>`).join('')}`;
+      const comer = e.comer.map(r=>`<div class="li"><span class="li-i">🍽️</span><div class="li-m"><div class="li-t">${r.n}</div><div class="li-s">${r.d}</div></div></div>`).join('');
+      const running = S.timerOn && S.timerEtapa===e.num;
+      const timer = running?
+        `<div class="timer-d" id="ti-${e.num}">${fmtT(S.timerSecs)}</div><div style="text-align:center;font-size:12px;color:#8a7a5a;margin-bottom:8px" id="tv-${e.num}">Vel: ${S.timerSecs>0?(e.km/(S.timerSecs/3600)).toFixed(1):'—'} km/h</div><button class="btn btn-r" onclick="stopTimer()">⏹ Terminar</button>`:
+        `<div style="text-align:center;font-size:12px;color:#6b5c3a;margin-bottom:8px;font-style:italic">${e.km} km — saída ${e.saida} — chegada ${e.chegada}</div><button class="btn btn-g" onclick="startTimer(${e.num})">▶ Iniciar Etapa ${e.num}</button>`;
+      body = `<div class="et-body open">
+        <div class="stab-row">
+          <button class="stab ${st==='info'?'active':''}" onclick="setETab(${e.num},'info')">📋 Info</button>
+          <button class="stab ${st==='carimbos'?'active':''}" onclick="setETab(${e.num},'carimbos')">🔴 Carimbos</button>
+          <button class="stab ${st==='comer'?'active':''}" onclick="setETab(${e.num},'comer')">🍽️ Comer</button>
+          <button class="stab ${st==='timer'?'active':''}" onclick="setETab(${e.num},'timer')">⏱️ Timer</button>
+        </div>
+        <div style="display:${st==='info'?'block':'none'}">${info}</div>
+        <div style="display:${st==='carimbos'?'block':'none'}">${carimb}</div>
+        <div style="display:${st==='comer'?'block':'none'}">${comer}</div>
+        <div style="display:${st==='timer'?'block':'none'}" id="tb-${e.num}" style="padding-top:10px">${timer}</div>
+      </div>`;
+    }
+    return `<div class="card">
+      <div class="et-header" onclick="toggleE(${e.num})">
+        <div class="et-num">0${e.num}</div>
+        <div class="et-info">
+          <div class="et-rota">${e.de} → ${e.para}</div>
+          <div class="et-meta"><span>📍 ${e.km} km</span><span>⏰ ${e.saida}</span><span>🎯 ${e.chegada}</span></div>
+          ${e.badges.length?`<div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">${badges}</div>`:''}
+        </div>
+        <span class="chev ${open?'open':''}">▼</span>
+      </div>${body}</div>`;
+  }).join('');
+}
+
+function toggleE(n){S.openEtapa=S.openEtapa===n?null:n;buildEtapas();}
+function setETab(n,t){S.etapaSubTab[n]=t;buildEtapas();}
+
+function fmtT(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');}
+
+function startTimer(n){
+  S.timerEtapa=n;S.timerSecs=0;S.timerOn=true;
+  clearInterval(timerInt);
+  timerInt=setInterval(()=>{
+    S.timerSecs++;
+    const gd=document.getElementById('timer-global-d');if(gd)gd.textContent=fmtT(S.timerSecs);
+    const ti=document.getElementById('ti-'+n);if(ti)ti.textContent=fmtT(S.timerSecs);
+    const tv=document.getElementById('tv-'+n);if(tv){const e=ETAPAS.find(e=>e.num===n);tv.textContent='Vel: '+(S.timerSecs>0?(e.km/(S.timerSecs/3600)).toFixed(1):'—')+' km/h';}
+  },1000);
+  const gt=document.getElementById('timer-global');if(gt){gt.style.display='block';document.getElementById('timer-label').textContent='⏱️ Etapa '+n+' em curso';}
+  buildEtapas();
+}
+
+function stopTimer(){clearInterval(timerInt);S.timerOn=false;S.timerEtapa=null;S.timerSecs=0;const gt=document.getElementById('timer-global');if(gt)gt.style.display='none';buildEtapas();}
+
+// ALOJAMENTOS
+function buildAloj(){
+  document.getElementById('aloj-container').innerHTML = ALOJAMENTOS.map(a=>`
+    <div class="card cp">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:10px;color:#6b5c3a;letter-spacing:1px;text-transform:uppercase">${a.dia}</div>
+          <div style="font-size:15px;color:#e8d9b8;font-weight:600">${a.local}</div>
+        </div>
+        <span class="badge ${a.st}">${a.stxt}</span>
+      </div>
+      <div style="font-size:12px;color:#8a7a5a;margin-bottom:6px">${a.nome}</div>
+      <div style="display:flex;gap:12px;font-size:12px;color:#6b5c3a"><span>💶 ${a.custo}</span><span>📋 ${a.como}</span></div>
+      ${a.tel?`<a href="tel:${a.tel.replace(/[^0-9+]/g,'')}" class="tel-link" style="margin-top:6px">📞 ${a.tel}</a>`:''}
+    </div>`).join('');
+}
+
+// EQUIPAMENTO
+function buildEquip(){
+  const all=EQUIPAMENTO.flatMap(g=>g.items);const tot=all.length;
+  const tenho=Object.values(S.itemStates).filter(v=>v==='tenho').length;
+  const comprar=Object.values(S.itemStates).filter(v=>v==='comprar').length;
+  const prog=Math.round((tenho/tot)*100);
+  document.getElementById('eq-tenho').textContent=tenho;
+  document.getElementById('eq-comprar').textContent=comprar;
+  document.getElementById('eq-decidir').textContent=tot-tenho-comprar;
+  document.getElementById('eq-prog').style.width=prog+'%';
+  document.getElementById('eq-prog-txt').textContent=prog+'% confirmado';
+  document.getElementById('f-todos').className='fbtn'+(S.equipFilter==='todos'?' ft':'');
+  document.getElementById('f-tenho').className='fbtn'+(S.equipFilter==='tenho'?' ft':'');
+  document.getElementById('f-comprar').className='fbtn'+(S.equipFilter==='comprar'?' fc':'');
+  document.getElementById('equip-container').innerHTML=EQUIPAMENTO.map(g=>{
+    const f=g.items.filter(i=>{const s=S.itemStates[i.id];if(S.equipFilter==='tenho')return s==='tenho';if(S.equipFilter==='comprar')return s==='comprar';return true;});
+    if(!f.length)return'';
+    return`<div class="eq-group"><div class="eq-gtitle">${g.grupo}</div>${f.map(i=>{const s=S.itemStates[i.id];return`<div class="eq-item" onclick="toggleItem(${i.id})"><div class="eq-check ${s||''}">${s==='tenho'?'✓':s==='comprar'?'€':''}</div><span class="eq-name ${s==='tenho'?'riscado':''}">${i.n}${i.critico&&!s?'<span class="eq-critical">●</span>':''}</span>${i.p&&s!=='tenho'?`<span class="eq-price">${i.p}</span>`:''}</div>`;}).join('')}</div>`;
+  }).join('');
+}
+
+function toggleItem(id){const c=S.itemStates[id];if(!c)S.itemStates[id]='tenho';else if(c==='tenho')S.itemStates[id]='comprar';else delete S.itemStates[id];scheduleSave();buildEquip();}
+function setFilter(f){S.equipFilter=f;buildEquip();}
+
+// DIÁRIO
+function buildDiario(){
+  document.getElementById('diario-container').innerHTML=ETAPAS.map(e=>{
+    const open=S.openDiario===e.num;
+    const nota=S.notas[e.num]||'';
+    const frase=S.notas_frase[e.num]||'';
+    const prev=nota?nota.substring(0,45)+(nota.length>45?'...':''):'Sem notas ainda...';
+    return`<div class="d-day">
+      <div class="d-header" onclick="toggleD(${e.num})">
+        <div class="d-num">0${e.num}</div>
+        <div class="d-info">
+          <div class="d-rota">${e.de} → ${e.para}</div>
+          <div class="d-prev" id="dp-${e.num}">${frase?'"'+frase+'"':prev}</div>
+        </div>
+        <span class="chev ${open?'open':''}">▼</span>
+      </div>
+      <div class="d-body ${open?'open':''}">
+        <div class="nota-box" style="margin-top:12px">${e.nota}</div>
+        <textarea class="d-frase-input" id="df-${e.num}" rows="1" placeholder="Uma frase que resume este dia..." oninput="saveFrase(${e.num})">${frase}</textarea>
+        <textarea class="d-ta" id="dn-${e.num}" rows="5" placeholder="Dia ${e.num} — ${e.de} → ${e.para}&#10;&#10;O que sentiste hoje?&#10;O que foi difícil? O que foi bonito?&#10;Qual a tua resposta parcial a &quot;Quem sou eu?&quot;..." oninput="saveNota(${e.num})">${nota}</textarea>
+        <div style="font-size:11px;color:#6b5c3a;font-style:italic;margin-top:4px" id="nh-${e.num}">${nota?nota.length+' caracteres':'Começa a escrever...'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleD(n){S.openDiario=S.openDiario===n?null:n;buildDiario();if(S.openDiario===n)setTimeout(()=>{const ta=document.getElementById('dn-'+n);if(ta)ta.focus();},100);}
+
+function saveFrase(n){const ta=document.getElementById('df-'+n);if(ta){S.notas_frase[n]=ta.value;const p=document.getElementById('dp-'+n);if(p)p.textContent=ta.value?'"'+ta.value+'"':(S.notas[n]?S.notas[n].substring(0,45)+'...':'Sem notas ainda...');scheduleSave();}}
+
+function saveNota(n){const ta=document.getElementById('dn-'+n);if(ta){S.notas[n]=ta.value;const h=document.getElementById('nh-'+n);if(h)h.textContent=ta.value?ta.value.length+' caracteres':'Começa a escrever...';if(!S.notas_frase[n]){const p=document.getElementById('dp-'+n);if(p)p.textContent=ta.value?ta.value.substring(0,45)+'...':'Sem notas ainda...';}scheduleSave();}}
+
+// ORÇAMENTO
+function buildOrc(){
+  updateOrcTotals();
+  document.getElementById('orc-container').innerHTML=ETAPAS.map(e=>{
+    const d=S.orcamento[e.num]||{};const nota=S.orc_notas[e.num]||'';
+    const tot=(parseFloat(d.aloj||0)+parseFloat(d.comida||0)+parseFloat(d.extra||0)).toFixed(0);
+    return`<div class="orc-day">
+      <div class="orc-dh"><div><div class="orc-dt">Dia ${e.num} — ${e.para}</div><div style="font-size:11px;color:#6b5c3a">${e.km} km</div></div><div class="orc-dtotal" id="od-${e.num}">€${tot}</div></div>
+      <div class="orc-inputs">
+        <div class="orc-ig"><div class="orc-il">Alojamento</div><input type="number" class="orc-i" placeholder="0" value="${d.aloj||''}" oninput="updOrc(${e.num},'aloj',this.value)"></div>
+        <div class="orc-ig"><div class="orc-il">Comida</div><input type="number" class="orc-i" placeholder="0" value="${d.comida||''}" oninput="updOrc(${e.num},'comida',this.value)"></div>
+        <div class="orc-ig"><div class="orc-il">Extras</div><input type="number" class="orc-i" placeholder="0" value="${d.extra||''}" oninput="updOrc(${e.num},'extra',this.value)"></div>
+      </div>
+      <textarea class="orc-nota" rows="1" placeholder="Notas do dia... (ex: jantar especial em Pontevedra)" oninput="updOrcNota(${e.num},this.value)">${nota}</textarea>
+    </div>`;
+  }).join('');
+}
+
+function updOrc(dia,campo,val){if(!S.orcamento[dia])S.orcamento[dia]={};S.orcamento[dia][campo]=val;const d=S.orcamento[dia];const t=(parseFloat(d.aloj||0)+parseFloat(d.comida||0)+parseFloat(d.extra||0)).toFixed(0);const el=document.getElementById('od-'+dia);if(el)el.textContent='€'+t;updateOrcTotals();scheduleSave();}
+function updOrcNota(dia,val){S.orc_notas[dia]=val;scheduleSave();}
+
+function updateOrcTotals(){
+  const v=Object.values(S.orcamento);
+  const ta=v.reduce((a,d)=>a+parseFloat(d.aloj||0),0);
+  const tc=v.reduce((a,d)=>a+parseFloat(d.comida||0),0);
+  const te=v.reduce((a,d)=>a+parseFloat(d.extra||0),0);
+  const tt=ta+tc+te;
+  document.getElementById('orc-total').textContent='€'+tt.toFixed(0);
+  document.getElementById('orc-aloj').textContent='€'+ta.toFixed(0);
+  document.getElementById('orc-comida').textContent='€'+tc.toFixed(0);
+  document.getElementById('orc-extra').textContent='€'+te.toFixed(0);
+  document.getElementById('orc-sobra').textContent='€'+Math.max(0,420-tt).toFixed(0);
+  const p=document.getElementById('orc-prog');
+  p.style.width=Math.min(100,(tt/420)*100)+'%';
+  p.style.background=tt>420?'#c85050':'linear-gradient(90deg,#64b464,#b8943a)';
+}
+
+// CONTACTOS
+function buildContactos(){
+  document.getElementById('contactos-container').innerHTML=CONTACTOS_TEL.map(c=>`
+    <div class="tel-card">
+      <div class="tel-local">${c.local}</div>
+      <div class="tel-nome">${c.nome}</div>
+      <a href="tel:${c.tel.replace(/[^0-9+]/g,'')}" class="tel-num">📞 ${c.tel}</a>
+      <div class="tel-nota">${c.nota}</div>
+    </div>`).join('');
+}
+
+// MARCOS
+function buildMarcos(){
+  const c=document.getElementById('marcos-container');if(!c)return;
+  c.innerHTML=MARCOS_DEF.map(m=>{
+    const done=S.marcos[m.id];
+    return`<div class="marco-item" onclick="toggleMarco('${m.id}')">
+      <div class="marco-icon">${m.icon}</div>
+      <div class="marco-info">
+        <div class="marco-title">${m.title}</div>
+        <div class="marco-desc">${m.desc}</div>
+        ${done?`<div class="marco-data">✓ ${done}</div>`:''}
+      </div>
+      <div class="marco-check ${done?'done':''}">${done?'✓':''}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleMarco(id){
+  if(S.marcos[id]){delete S.marcos[id];}
+  else{const now=new Date();S.marcos[id]=now.toLocaleDateString('pt-PT',{day:'numeric',month:'short'})+' '+now.toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});}
+  scheduleSave();buildMarcos();
+}
+
+// SAÚDE
+function buildSaude(){
+  const c=document.getElementById('saude-container');if(!c)return;
+  c.innerHTML=ETAPAS.map(e=>{
+    const open=S.openSaude===e.num;
+    const d=S.saude[e.num]||{};
+    const energia=d.energia||0;
+    const pes=d.pes||0;
+    const agua=d.agua||'';
+    const dores=d.dores||'';
+    return`<div class="saude-day">
+      <div class="saude-dh" onclick="toggleSaude(${e.num})">
+        <div class="saude-dt">Dia ${e.num} — ${e.de} → ${e.para}</div>
+        <span class="chev ${open?'open':''}">▼</span>
+      </div>
+      <div class="saude-body ${open?'open':''}">
+        <div class="saude-row">
+          <span class="saude-lbl">Energia</span>
+          <div class="saude-val">${[1,2,3,4,5].map(v=>`<button class="saude-btn ${energia===v?'sel':''}" onclick="setSaude(${e.num},'energia',${v})">${v}</button>`).join('')}</div>
+        </div>
+        <div class="saude-row">
+          <span class="saude-lbl">Estado dos pés</span>
+          <div class="saude-val">${[1,2,3,4,5].map(v=>`<button class="saude-btn ${pes===v?'sel':''}" onclick="setSaude(${e.num},'pes',${v})">${v}</button>`).join('')}</div>
+        </div>
+        <div class="saude-row">
+          <span class="saude-lbl">Água (L)</span>
+          <input class="saude-input" type="number" placeholder="ex: 2.5" value="${agua}" oninput="setSaudeInput(${e.num},'agua',this.value)">
+        </div>
+        <div class="saude-row">
+          <span class="saude-lbl">Dores</span>
+          <input class="saude-input" type="text" placeholder="joelho, tornozelo..." value="${dores}" oninput="setSaudeInput(${e.num},'dores',this.value)">
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleSaude(n){S.openSaude=S.openSaude===n?null:n;buildSaude();}
+function setSaude(dia,campo,val){if(!S.saude[dia])S.saude[dia]={};S.saude[dia][campo]=val;scheduleSave();buildSaude();}
+function setSaudeInput(dia,campo,val){if(!S.saude[dia])S.saude[dia]={};S.saude[dia][campo]=val;scheduleSave();}
+
+// PEREGRINOS
+function buildPereg(){
+  const c=document.getElementById('pereg-container');if(!c)return;
+  if(!S.peregrinos.length){c.innerHTML='<div class="hint" style="text-align:center;padding:16px">Ainda não encontraste ninguém.<br>O caminho traz-te pessoas.</div>';return;}
+  c.innerHTML=S.peregrinos.map((p,i)=>`
+    <div class="pereg-item">
+      <button class="pereg-del" onclick="delPereg(${i})">×</button>
+      <div class="pereg-nome">${p.nome}</div>
+      <div class="pereg-de">De ${p.de} · Dia ${p.dia}</div>
+      ${p.frase?`<div class="pereg-frase">"${p.frase}"</div>`:''}
+    </div>`).join('');
+}
+
+function addPeregrino(){
+  const n=document.getElementById('p-nome').value.trim();
+  const d=document.getElementById('p-de').value.trim();
+  const f=document.getElementById('p-frase').value.trim();
+  if(!n)return;
+  S.peregrinos.push({nome:n,de:d||'?',frase:f,dia:S.dia_atual});
+  document.getElementById('p-nome').value='';document.getElementById('p-de').value='';document.getElementById('p-frase').value='';
+  scheduleSave();buildPereg();
+}
+
+function delPereg(i){S.peregrinos.splice(i,1);scheduleSave();buildPereg();}
+
+// STATS
+function buildStats(){
+  const c=document.getElementById('stats-container');if(!c)return;
+  const km=ETAPAS.slice(0,S.dia_atual).reduce((a,e)=>a+e.km,0);
+  const totalOrc=Object.values(S.orcamento).reduce((t,d)=>t+(parseFloat(d.aloj||0)+parseFloat(d.comida||0)+parseFloat(d.extra||0)),0);
+  const notasDias=Object.keys(S.notas).length;
+  const marcosFeitos=Object.keys(S.marcos).length;
+  const tenho=Object.values(S.itemStates).filter(v=>v==='tenho').length;
+  c.innerHTML=`
+    <div class="stat-card"><span class="stat-num" style="color:#d4a017">${km}</span><span class="stat-lbl">km feitos</span></div>
+    <div class="stat-card"><span class="stat-num" style="color:#64b464">${190-km}</span><span class="stat-lbl">km restantes</span></div>
+    <div class="stat-card"><span class="stat-num" style="color:#6496c8">€${totalOrc.toFixed(0)}</span><span class="stat-lbl">total gasto</span></div>
+    <div class="stat-card"><span class="stat-num" style="color:#b8943a">€${Math.max(0,420-totalOrc).toFixed(0)}</span><span class="stat-lbl">orçamento restante</span></div>
+    <div class="stat-card"><span class="stat-num" style="color:#c85050">${S.dia_atual}</span><span class="stat-lbl">dias feitos</span></div>
+    <div class="stat-card"><span class="stat-num" style="color:#8a7a5a">${notasDias}</span><span class="stat-lbl">entradas diário</span></div>
+    <div class="stat-card"><span class="stat-num" style="color:#d4a017">${marcosFeitos}</span><span class="stat-lbl">marcos alcançados</span></div>
+    <div class="stat-card"><span class="stat-num" style="color:#64b464">${tenho}</span><span class="stat-lbl">itens confirmados</span></div>`;
+}
+
+// INIT
+function buildAll(){
+  buildNav();
+  updateHeader();
+  buildHoje();
+  buildEtapas();
+  buildAloj();
+  buildEquip();
+  buildDiario();
+  buildOrc();
+  buildContactos();
+  buildMarcos();
+  buildSaude();
+  buildPereg();
+  buildStats();
+}
+
+async function init(){
+  // Carrega local primeiro — app aparece imediatamente
+  loadLocal();
+  buildAll();
+  // Depois tenta Supabase em background
+  try {
+    setSyncStatus('saving','A SINCRONIZAR...');
+    const r = await Promise.race([
+      supaLoad(),
+      new Promise((_,reject) => setTimeout(()=>reject(new Error('timeout')), 5000))
+    ]);
+    buildAll(); // reconstrói com dados da cloud
+  } catch(e) {
+    setSyncStatus('offline','MODO OFFLINE');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
